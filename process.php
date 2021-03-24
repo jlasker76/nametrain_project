@@ -1,20 +1,11 @@
 <?php include("db.php");
 
-//echo 'post names= '. $_POST['names'];
 foreach ($_POST['names'] as $value) {
   $x = 0;
   $names_str.= implode(",",$value).", "; 
-  /*
-  while($x <= count($value)) {
-    //echo "The number is: $value[$x] <br>";
-    echo "implode= ".implode($value);
-    $x++;
-  }
-  */ 
-  //echo "$value <br>";
+  
 }
 
-echo 'will save='. $names_str;
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
