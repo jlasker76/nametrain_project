@@ -4,6 +4,7 @@ $(document).ready(function(){
     var myObj
     var formArray = []
     var xmlhttp = new XMLHttpRequest();
+    var round=0;
     xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         myObj = JSON.parse(this.responseText);
@@ -15,6 +16,15 @@ $(document).ready(function(){
     };
     xmlhttp.open("GET", "names_separated_032121.json", true);
     xmlhttp.send();
+
+    var accolades = [];
+    accolades.push("Nice Job!");
+    accolades.push("Choo Choo!");
+    accolades.push("Name Train!");
+    accolades.push("Come on ride that train!");
+    accolades.push("I hear the train a comin'!");
+    accolades.push("Ding Ding Ding!");
+    accolades.push("Arancia, Coca, Birra!");
 
     /*
     var nameObject;
@@ -44,6 +54,9 @@ $(document).ready(function(){
         //todo get a starter name
         //all games start with 4 positions: 0,1,2,3
         //update as user progresses
+        if(round !=0 ){
+            submitToDatabase();
+        }
         console.log('make form');
         fLen = formArray.length;
         $("#form").html('');
@@ -76,6 +89,7 @@ $(document).ready(function(){
 
         $("#results").html('');
         resetTimer();
+        round++;
       
     }
 
@@ -248,6 +262,7 @@ $(document).ready(function(){
     function reset(){
         console.log(formArray);
         formArray = [];
+        round=0;
         makeStarters();
         //check submission
     }
@@ -260,34 +275,38 @@ $(document).ready(function(){
     function countdown() {
         if (timeLeft == -1) {
             clearTimeout(timerId);
-            doSomething();
+            timesUp();
         } else {
             elem.innerHTML = timeLeft + ' seconds remaining';
             timeLeft--;
         }
     }
-    function doSomething() {
-        alert('game over! Hit refresh to start again')
+    function timesUp() {
+        //reset();
+        if(alert('Game over! Click okay to play again')){}
+        else    window.location.reload(); 
         console.log(formArray);
-        submitToDatabase();
+        
     }
     function resetTimer(){
+
         timeLeft = 30;
     }
 
     function submitToDatabase(){
-        var dataString = 'names='+ formArray;
+        //var dataString = 'names='+ formArray;
+        min = 0
+        max = accolades.length;
+        random = Math.floor((Math.random()*max) + min);
         
         $.ajax({
             type: "POST",
             url: "process.php",
-            data: dataString,
-            success: function(message)
-                {	
-                    window.opener.location.reload();
-                    window.close();
-                    
-                }
+            //data: dataString,
+            data: {names:formArray},
+            success: function(data) {
+                alert(accolades[random]);
+            }
         });
     }
     
